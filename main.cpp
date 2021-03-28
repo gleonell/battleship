@@ -7,12 +7,13 @@ int main()
     int map[N][N] = {0};
     int x,y;
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 2; i++)
     {
         x = rand() % N;
         y = rand() % N;
         map [x][y] = 1;
     }
+
 
     for (int i = 0; i < N; i++)
     {
@@ -33,6 +34,26 @@ int main()
         {
             std::cout << "Попадание" << std::endl;
             map[x][y] = 0;
+            bool ship_decected = false;
+
+            for (int i = 0; i < N; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    if (map[i][j] == 1)
+                    {
+                        ship_decected = true;
+                        break;
+                    }
+                }
+                if (ship_decected == true)
+                    break;
+            }   
+            if (ship_decected == false)
+            {
+                std::cout << "Победа" << std::endl;
+                break;
+            }        
         }
         else
             std::cout << "Промах" << std::endl;
