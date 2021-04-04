@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdlib>
+#include <unistd.h>
+#include <stdlib.h>
 
 const int N = 10;
 
@@ -88,28 +90,91 @@ void ships_setting(int map[N][N], int ship_size, int ship_num)
     }
 }
 
+void map_print(int map[N][N], int mask[N][N])
+{
+    std::cout << ' ';
+
+    for (int i = 0; i < N; i++)
+    {
+        std::cout << i;
+    }
+
+    std::cout << std::endl;
+
+    for (int i = 0; i < N; i++) // output
+        {
+            std::cout << i;
+            for (int j = 0; j < N; j++)
+            {
+                if (mask[j][i] == 1)
+                {
+                    if (map[j][i] == 0)
+                        std::cout << '-';
+                    else
+                        std::cout << map[j][i];
+                }
+                else
+                    std::cout << ' ';
+            }
+            std::cout << std::endl;
+        }
+}
+
 int main(void)
 {
     while (true)
     {
         int map[N][N] = {0};
+        int mask[N][N] = {0};
 
         ships_setting(map, 4, 1);
         ships_setting(map, 3, 2);
         ships_setting(map, 2, 3);
         ships_setting(map, 1, 4);
 
-        for (int i = 0; i < N; i++) // output
+        int x = 0, y = 0;
+        while (true)
         {
-            for (int j = 0; j < N; j++)
+            map_print(map, mask);
+
+            std::cout << "Введите координаты цели: " << std::endl;
+            std::cin >> x;
+            std::cin >> y;
+
+            if (map[x][y] == 1)
             {
-                if (map[j][i] == 0)
-                    std::cout << '-';
-                else
-                    std::cout << map[j][i];
+                std::cout << "Попадание" << std::endl;
             }
-            std::cout << std::endl;
-        }system("pause");
+            else
+                 std::cout << "Промах" << std::endl;
+                mask[x][y] = 1;
+
+                sleep(1);
+                system("clear");
+                // bool ship_decected = false;
+
+                // for (int i = 0; i < N; i++)
+                // {
+                //     for (int j = 0; j < N; j++)
+                //     {
+                //         if (map[i][j] == 1)
+                //         {
+                //             ship_decected = true;
+                //             break;
+                //         }
+                //     }
+                //     if (ship_decected == true)
+                //         break;
+                // }   
+                // if (ship_decected == false)
+                // {
+                //     std::cout << "Победа" << std::endl;
+                //     break;
+                // }        
+           // }
+            // 
+        }
+        //system("pause");
     }
     
     return (0);
