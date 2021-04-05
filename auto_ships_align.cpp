@@ -4,6 +4,9 @@
 #include <stdlib.h>
 
 const int N = 10;
+int ships_ID = 1;
+int ships_NUM[10] = {0};
+
 
 void ships_setting(int map[N][N], int ship_size, int ship_num)
 {
@@ -31,15 +34,15 @@ void ships_setting(int map[N][N], int ship_size, int ship_num)
                 break;
             }
 
-            if (map [x  ][y  ] == 1 ||
-                map [x+1][y  ] == 1 ||
-                map [x+1][y+1] == 1 ||
-                map [x  ][y+1] == 1 ||
-                map [x-1][y+1] == 1 ||
-                map [x-1][y  ] == 1 ||
-                map [x-1][y-1] == 1 ||
-                map [x  ][y-1] == 1 ||
-                map [x+1][y-1] == 1 )
+            if (map [x  ][y  ] >= 1 ||
+                map [x+1][y  ] >= 1 ||
+                map [x+1][y+1] >= 1 ||
+                map [x  ][y+1] >= 1 ||
+                map [x-1][y+1] >= 1 ||
+                map [x-1][y  ] >= 1 ||
+                map [x-1][y-1] >= 1 ||
+                map [x  ][y-1] >= 1 ||
+                map [x+1][y-1] >= 1 )
                 {
                     set_is_possible = 0;
                     break;
@@ -68,7 +71,7 @@ void ships_setting(int map[N][N], int ship_size, int ship_num)
             y = temp_y;
             for (int i = 0; i < ship_size; i++) // растановка корабля 
             {
-                map[x][y] = 1;
+                map[x][y] = ships_ID;
                 switch(dir)
                 {
                     case 0:
@@ -84,7 +87,9 @@ void ships_setting(int map[N][N], int ship_size, int ship_num)
                         y--;
                     break;
                 }
-            } 
+            }
+            ships_NUM[ships_ID] = ship_size;
+            ships_ID++;
             ship_count++;
         }
     }
@@ -110,11 +115,13 @@ void map_print(int map[N][N], int mask[N][N])
                 {
                     if (map[j][i] == 0)
                         std::cout << '-';
+                    else if (map[j][i] == -1)
+                        std::cout << 'X';
                     else
                         std::cout << map[j][i];
                 }
                 else
-                    std::cout << ' ';
+                   std::cout << ' ';
             }
             std::cout << std::endl;
         }
@@ -130,7 +137,7 @@ int main(void)
         ships_setting(map, 4, 1);
         ships_setting(map, 3, 2);
         ships_setting(map, 2, 3);
-        ships_setting(map, 1, 4);
+        ships_setting(map, 1, 3);
 
         int x = 0, y = 0;
         while (true)
@@ -141,12 +148,18 @@ int main(void)
             std::cin >> x;
             std::cin >> y;
 
-            if (map[x][y] == 1)
+            if (map[x][y] >= 1)
             {
-                std::cout << "Попадание" << std::endl;
+                ships_NUM[map[x][y]]--;
+
+                if (ships_NUM[map[x][y]] <= 0)
+                    std::cout << "Корабль потоплен" << std::endl;
+                else
+                    std::cout << "Попадание. Корабль ранен" << std::endl;
+                map[x][y] = -1;
             }
             else
-                 std::cout << "Промах" << std::endl;
+                  std::cout << "Промах" << std::endl;
                 mask[x][y] = 1;
 
                 sleep(1);
